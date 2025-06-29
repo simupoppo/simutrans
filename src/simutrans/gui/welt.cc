@@ -532,7 +532,7 @@ bool welt_gui_t::action_triggered( gui_action_creator_t *comp,value_t v)
 		delete sets;
 		sets = NULL;
 		if(loaded_heightfield) {
-			welt->load_heightfield(&env_t::default_settings);
+			welt->load_heightfield(&env_t::default_settings,true);
 		}
 		else {
 			env_t::default_settings.heightfield = "";
