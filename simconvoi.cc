@@ -1245,12 +1245,12 @@ bool convoi_t::drive_to()
 				}
 
 				// set next schedule target position if next is a waypoint
-				if(  is_waypoint(ziel) && !schedule->at(current_stop).is_reverse_convoi_coupling()  ) {
+				if(  is_waypoint(ziel) ) {
 					schedule_target = ziel;
 				}
 
 				// continue route search until the destination is a station
-				while(  is_waypoint(ziel) && !schedule->get_current_entry().is_reverse_convoi_coupling()  ) {
+				while(  is_waypoint(ziel) ) {
 					start = ziel;
 					schedule->advance();
 					ziel = schedule->get_current_entry().pos;
