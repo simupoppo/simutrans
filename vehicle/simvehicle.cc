@@ -1671,6 +1671,12 @@ image_id vehicle_t::get_loaded_image() const
 }
 
 
+sint64 vehicle_t::get_operating_cost() const
+{
+	return (desc->get_running_cost() * (sint64)welt->get_settings().get_running_cost_multiplier_vehicle()) / 100l;
+}
+
+
 // true, if this vehicle did not moved for some time
 bool vehicle_t::is_stuck()
 {

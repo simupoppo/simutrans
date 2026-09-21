@@ -2012,19 +2012,19 @@ void depot_frame_t::update_data()
 				if(  sint64 fix_cost = cnv->get_fixed_cost()  ) {
 					money_to_string(  buf, (double)cnv->get_purchase_cost() / 100.0, false );
 					if(env_t::show_yen){
-						txt_convoi_cost.printf( translator::translate("Cost: %8s (%d$/km %d$/m)\n"), buf, cnv->get_running_cost(), fix_cost );
+						txt_convoi_cost.printf( translator::translate("Cost: %8s (%d$/km %d$/m)\n"), buf, cnv->get_running_cost_scaled(), fix_cost );
 					}
 					else{
-						txt_convoi_cost.printf( translator::translate("Cost: %8s (%.2f$/km %.2f$/m)\n"), buf, (double)cnv->get_running_cost()/100.0, (double)fix_cost/100.0 );
+						txt_convoi_cost.printf( translator::translate("Cost: %8s (%.2f$/km %.2f$/m)\n"), buf, (double)cnv->get_running_cost_scaled()/100.0, (double)fix_cost/100.0 );
 					}
 				}
 				else {
 					money_to_string(  buf, cnv->get_purchase_cost() / 100.0, false );
 					if(env_t::show_yen){
-						txt_convoi_cost.printf( translator::translate("Cost: %8s (%d$/km)\n"), buf, cnv->get_running_cost() );
+						txt_convoi_cost.printf( translator::translate("Cost: %8s (%d$/km)\n"), buf, cnv->get_running_cost_scaled() );
 					}
 					else{
-						txt_convoi_cost.printf( translator::translate("Cost: %8s (%.2f$/km)\n"), buf, (double)cnv->get_running_cost() / 100.0 );
+						txt_convoi_cost.printf( translator::translate("Cost: %8s (%.2f$/km)\n"), buf, (double)cnv->get_running_cost_scaled() / 100.0 );
 					}
 				}
 			}

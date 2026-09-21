@@ -833,6 +833,12 @@ uint32 convoi_t::get_length() const
 	return len;
 }
 
+sint32 convoi_t::get_running_cost_scaled() const
+{
+	return -(sint32)((base_sum_running_costs * (sint64)welt->get_settings().get_running_cost_multiplier_vehicle()) / 100l);
+}
+
+
 uint32 convoi_t::get_entire_convoy_length() const
 {
 	uint32 len = 0;
@@ -4084,7 +4090,7 @@ void convoi_t::info(cbuffer_t & buf) const
 	if (v != NULL) {
 		char tmp[128];
 
-		buf.printf("\n %d/%dkm/h (%1.2f$/km)\n", speed_to_kmh(min_top_speed), v->get_desc()->get_topspeed(), get_running_cost() / 100.0);
+		buf.printf("\n %d/%dkm/h (%1.2f$/km)\n", speed_to_kmh(min_top_speed), v->get_desc()->get_topspeed(), get_running_cost_scaled() / 100.0);
 		buf.printf(" %s: %ikW\n", translator::translate("Leistung"), sum_power);
 		buf.printf(" %s: %ld (%ld) t\n", translator::translate("Gewicht"), (long)sum_weight, (long)(sum_gesamtweight - sum_weight));
 		buf.printf(" %s: ", translator::translate("Gewinn"));
