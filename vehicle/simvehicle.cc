@@ -6084,7 +6084,6 @@ void rail_vehicle_t::leave_tile()
 					// other convoy exist!
 					other_convoy = v->get_convoi()->self;
 					const uint16 current_stop = v->get_route_index();
-					dbg->message("rail_vehicle_t::leave_tile()", "other convoy %s found at %s, %i, %i, %s",other_convoy->get_name(), get_pos().get_str(), current_stop, other_convoy->get_route()->get_count(),other_convoy->front()->get_pos().get_str());
 					// current_stop belongs to a convoy we do not drive, so it is not bounded by
 					// that convoy's route: hop() lets route_index run past the end (see
 					// vehicle_t::reanchor_route_index()). Clamp both ends - note get_count() is
