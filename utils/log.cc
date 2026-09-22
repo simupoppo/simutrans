@@ -369,6 +369,7 @@ void log_t::custom_fatal(char *buffer)
 		// use OS means, if there
 		dr_fatal_notify(buffer);
 	}
+	assert( 0 );
 
 	abort();
 #endif

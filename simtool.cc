@@ -5446,7 +5446,7 @@ DBG_MESSAGE("tool_station_aux()", "building %s on square %d,%d for waytype %x", 
 	// what determines validity/orientation. If either way is straight, this is false and the
 	// existing union-based logic below applies unchanged.
 	const bool disjoint_diagonal_halt = bd->has_two_ways()
-		&&  ribi_t::are_disjoint_bends( bd->get_weg_nr(0)->get_ribi_unmasked(), bd->get_weg_nr(1)->get_ribi_unmasked() );
+		&&  ribi_t::are_disjoint_legs( bd->get_weg_nr(0)->get_ribi_unmasked(), bd->get_weg_nr(1)->get_ribi_unmasked() );
 
 	if(  desc->get_all_layouts()==112  ) {
 		// through station supporting diagonal
