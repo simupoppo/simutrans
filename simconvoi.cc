@@ -717,7 +717,6 @@ DBG_MESSAGE("convoi_t::finish_rd()","next_stop_index=%d", next_stop_index );
 		}
 		reserve_route();
 	}
-
 }
 
 
