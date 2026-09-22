@@ -2012,19 +2012,19 @@ void depot_frame_t::update_data()
 				if(  sint64 fix_cost = cnv->get_fixed_cost()  ) {
 					money_to_string(  buf, (double)cnv->get_purchase_cost() / 100.0, false );
 					if(env_t::show_yen){
-						txt_convoi_cost.printf( translator::translate("Cost: %8s (%d$/km %d$/m)\n"), buf, cnv->get_running_cost(), fix_cost );
+						txt_convoi_cost.printf( translator::translate("Cost: %8s (%d$/km %d$/m)\n"), buf, cnv->get_running_cost_scaled(), fix_cost );
 					}
 					else{
-						txt_convoi_cost.printf( translator::translate("Cost: %8s (%.2f$/km %.2f$/m)\n"), buf, (double)cnv->get_running_cost()/100.0, (double)fix_cost/100.0 );
+						txt_convoi_cost.printf( translator::translate("Cost: %8s (%.2f$/km %.2f$/m)\n"), buf, (double)cnv->get_running_cost_scaled()/100.0, (double)fix_cost/100.0 );
 					}
 				}
 				else {
 					money_to_string(  buf, cnv->get_purchase_cost() / 100.0, false );
 					if(env_t::show_yen){
-						txt_convoi_cost.printf( translator::translate("Cost: %8s (%d$/km)\n"), buf, cnv->get_running_cost() );
+						txt_convoi_cost.printf( translator::translate("Cost: %8s (%d$/km)\n"), buf, cnv->get_running_cost_scaled() );
 					}
 					else{
-						txt_convoi_cost.printf( translator::translate("Cost: %8s (%.2f$/km)\n"), buf, (double)cnv->get_running_cost() / 100.0 );
+						txt_convoi_cost.printf( translator::translate("Cost: %8s (%.2f$/km)\n"), buf, (double)cnv->get_running_cost_scaled() / 100.0 );
 					}
 				}
 			}
@@ -2744,6 +2744,8 @@ void depot_frame_t::draw_vehicle_info_text(scr_coord pos)
 				(double)total_len_carunits / CARUNITS_PER_TILE);
 			char tmp[128];
 			money_to_string(tmp, cost / 100.0, false);
+			// scale by the running cost multiplier setting, like convoi_t::add_running_cost()
+			run_cost = (run_cost * (uint64)welt->get_settings().get_running_cost_multiplier_vehicle()) / 100ull;
 			if (env_t::show_yen) {
 				buf.printf(translator::translate("Cost: %8s (%llu$/km)\n"), tmp, run_cost);
 			}
@@ -2845,24 +2847,26 @@ void depot_frame_t::draw_vehicle_info_text(scr_coord pos)
 			buf.append( "\n" );
 		}
 
+		// scale by the running cost multiplier setting, like convoi_t::add_running_cost()
+		const sint64 veh_type_running_cost = (veh_type->get_running_cost() * (sint64)welt->get_settings().get_running_cost_multiplier_vehicle()) / 100l;
 		if(  sint64 fix_cost = welt->scale_with_month_length( veh_type->get_fixed_cost() )  ) {
 			char tmp[128];
 			money_to_string( tmp, veh_type->get_price() / 100.0, false );
 			if(env_t::show_yen){
-				buf.printf( translator::translate("Cost: %8s (%d$/km %d$/m)\n"), tmp, veh_type->get_running_cost(), fix_cost );
+				buf.printf( translator::translate("Cost: %8s (%d$/km %d$/m)\n"), tmp, veh_type_running_cost, fix_cost );
 			}
 			else{
-				buf.printf( translator::translate("Cost: %8s (%.2f$/km %.2f$/m)\n"), tmp, veh_type->get_running_cost()/100.0, fix_cost/100.0 );
+				buf.printf( translator::translate("Cost: %8s (%.2f$/km %.2f$/m)\n"), tmp, veh_type_running_cost/100.0, fix_cost/100.0 );
 			}
 		}
 		else {
 			char tmp[128];
 			money_to_string(  tmp, veh_type->get_price() / 100.0, false );
 			if(env_t::show_yen){
-				buf.printf( translator::translate("Cost: %8s (%d$/km)\n"), tmp, veh_type->get_running_cost() );
+				buf.printf( translator::translate("Cost: %8s (%d$/km)\n"), tmp, veh_type_running_cost );
 			}
 			else{
-				buf.printf( translator::translate("Cost: %8s (%.2f$/km)\n"), tmp, veh_type->get_running_cost()/100.0 );
+				buf.printf( translator::translate("Cost: %8s (%.2f$/km)\n"), tmp, veh_type_running_cost/100.0 );
 			}
 		}
 

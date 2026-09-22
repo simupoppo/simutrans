@@ -354,9 +354,10 @@ public:
 	const vehicle_desc_t *get_desc() const {return desc; }
 
 	/**
-	* @return die running_cost in Cr/100Km
+	* @return die running_cost in Cr/100Km, scaled by the running cost multiplier setting
+	* (see convoi_t::add_running_cost())
 	*/
-	sint64 get_operating_cost() const { return desc->get_running_cost(); }
+	sint64 get_operating_cost() const;
 
 	/**
 	* Play sound, when the vehicle is visible on screen

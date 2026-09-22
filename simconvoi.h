@@ -742,9 +742,11 @@ public:
 	sint64 get_fixed_cost() const { return -sum_fixed_costs; }
 
 	/**
-	 * returns the total running cost for all vehicles in convoi
+	 * returns the total running cost for all vehicles in convoi,
+	 * scaled by the running cost multiplier setting (see add_running_cost())
+	 * -- unlike vehicle_desc_t::get_running_cost(), which is the unscaled base value
 	 */
-	sint32 get_running_cost() const { return -base_sum_running_costs; }
+	sint32 get_running_cost_scaled() const;
 
 	/**
 	 * returns the total new purchase cost for all vehicles in convoy
