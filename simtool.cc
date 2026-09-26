@@ -5446,7 +5446,7 @@ DBG_MESSAGE("tool_station_aux()", "building %s on square %d,%d for waytype %x", 
 	// what determines validity/orientation. If either way is straight, this is false and the
 	// existing union-based logic below applies unchanged.
 	const bool disjoint_diagonal_halt = bd->has_two_ways()
-		&&  ribi_t::are_disjoint_bends( bd->get_weg_nr(0)->get_ribi_unmasked(), bd->get_weg_nr(1)->get_ribi_unmasked() );
+		&&  ribi_t::are_disjoint_legs( bd->get_weg_nr(0)->get_ribi_unmasked(), bd->get_weg_nr(1)->get_ribi_unmasked() );
 
 	if(  desc->get_all_layouts()==112  ) {
 		// through station supporting diagonal
@@ -10838,6 +10838,7 @@ bool tool_change_traffic_light_t::init( player_t *player )
  * n:set packed from-N/from-S allowed exit ribis on detailed_oneway sign (ticks_ns)
  * e:set packed from-E/from-W allowed exit ribis on detailed_oneway sign (ticks_ow)
  * w:set two_ways flag on signal (allow convoys to pass from reverse direction)
+ * i:set ignore lentgh
  */
 bool tool_change_roadsign_t::init( player_t *player )
 {
@@ -11072,6 +11073,21 @@ bool tool_change_roadsign_t::init( player_t *player )
 			if(  signal_t *sig = gr->find<signal_t>()  ) {
 				if(  player_t::check_owner(sig->get_owner(), player)  ) {
 					sig->set_two_ways(inst != 0);
+					signal_info_t* signal_info_win = (signal_info_t*)win_get_magic((ptrdiff_t)sig);
+					if(  signal_info_win  ) {
+						signal_info_win->update_data();
+					}
+				}
+			}
+		}
+		break;
+
+		case 'i':
+		// ignore length for choose/guide signals
+		if(  grund_t *gr = welt->lookup(pos)  ) {
+			if(  signal_t *sig = gr->find<signal_t>()  ) {
+				if(  player_t::check_owner(sig->get_owner(), player)  ) {
+					sig->set_ignore_length(inst != 0);
 					signal_info_t* signal_info_win = (signal_info_t*)win_get_magic((ptrdiff_t)sig);
 					if(  signal_info_win  ) {
 						signal_info_win->update_data();

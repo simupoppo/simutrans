@@ -354,9 +354,10 @@ public:
 	const vehicle_desc_t *get_desc() const {return desc; }
 
 	/**
-	* @return die running_cost in Cr/100Km
+	* @return die running_cost in Cr/100Km, scaled by the running cost multiplier setting
+	* (see convoi_t::add_running_cost())
 	*/
-	sint64 get_operating_cost() const { return desc->get_running_cost(); }
+	sint64 get_operating_cost() const;
 
 	/**
 	* Play sound, when the vehicle is visible on screen
@@ -377,6 +378,21 @@ public:
 	 * route_index, which would make route_t::at() run off the end.
 	 */
 	void clamp_route_index();
+
+	/**
+	 * Re-derive route_index from the tile this vehicle actually stands on, against the
+	 * route its convoy currently holds. hop() increments route_index without an upper
+	 * bound once the vehicle has passed the end of its own route - a coupled child that
+	 * is dragged along keeps hopping on its parent's behalf while indexing into its own
+	 * (possibly shorter) copy of the route - so the index can be arbitrarily far past
+	 * get_count(). Coupling and uncoupling hand that index to a different convoy, so it
+	 * must be re-anchored there.
+	 * pos_next is deliberately left alone: it is the tile the vehicle is physically
+	 * moving onto, and hop() re-derives it from route_index at the next tile change.
+	 * @returns true if get_pos() was found in the route; false means the vehicle is not
+	 *          on its own route at all and route_index was clamped instead.
+	 */
+	bool reanchor_route_index();
 
 	vehicle_t();
 	vehicle_t(koord3d pos, const vehicle_desc_t* desc, player_t* player);
@@ -697,9 +713,9 @@ public:
 	uint32 get_cost_upslope() const OVERRIDE { return 25; }
 
 	// returns true for the way search to an unknown target.
-	bool is_target(const grund_t*, const grund_t*, const bool, const uint8) const OVERRIDE;
-	bool is_target(const grund_t *gr,const grund_t *prev_gr) const OVERRIDE {return is_target(gr,prev_gr,false,0);}
-	bool is_coupling_target(const grund_t *, const grund_t *) const OVERRIDE;
+	bool is_target(const grund_t*, const grund_t*, const bool, const uint8, const bool) const OVERRIDE;
+	bool is_target(const grund_t *gr,const grund_t *prev_gr) const OVERRIDE {return is_target(gr,prev_gr,false,0,false);}
+	bool is_coupling_target(const grund_t *, const grund_t *,const bool) const OVERRIDE;
 
 	// handles all block stuff and route choosing ...
 	bool can_enter_tile(const grund_t *gr_next, sint32 &restart_speed, uint8) OVERRIDE;
