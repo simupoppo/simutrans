@@ -4690,18 +4690,6 @@ void convoi_t::hat_gehalten(halthandle_t halt, uint32 halt_length_in_vehicle_ste
 		check_and_set_coupling_done_over_length();
 	}
 
-	// Convoy shipping. Run before loading so that a convoy put ashore here is on the map for
-	// the rest of this stop, and so that a convoy taken aboard has already finished loading
-	// its own goods (it went through hat_gehalten() itself earlier in this halt's queue).
-	if(  !is_coupled()  ) {
-		if(  is_carrying_convoys()  ||  has_shipping_capacity()  ) {
-			handle_shipping_at_halt( halt );
-		}
-		if(  is_waiting_for_carrier()  ) {
-			try_start_shipping( halt );
-		}
-	}
-
 	// Count how many vehicles can load and unload.
 	uint8 vehicles_loading = 0;
 	uint32 convoy_length_step = 0;
@@ -4922,6 +4910,19 @@ void convoi_t::hat_gehalten(halthandle_t halt, uint32 halt_length_in_vehicle_ste
 		reversing_needed = true;
 		// reverse image direction after departire, in drive_to()
 	}
+
+	// Convoy shipping. Run before loading so that a convoy put ashore here is on the map for
+	// the rest of this stop, and so that a convoy taken aboard has already finished loading
+	// its own goods (it went through hat_gehalten() itself earlier in this halt's queue).
+	if(  !is_coupled()  ) {
+		if(  is_carrying_convoys()  ||  has_shipping_capacity()  ) {
+			handle_shipping_at_halt( halt );
+		}
+		if(  is_waiting_for_carrier()  ) {
+			try_start_shipping( halt );
+		}
+	}
+
 	// reverse order of coupling/coupled convois
 	if (  coupling_convoi.is_bound()  &&  !is_coupled()  &&  !is_waiting_for_coupling()  &&  !reverse_coupling_done  )
 	{
