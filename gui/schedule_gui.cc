@@ -1115,9 +1115,6 @@ void schedule_gui_t::update_selection()
 		bt_drive_without_reservation.pressed = schedule->at(current_stop).is_drive_without_reservation();
 		bt_all_without_reservation.enable();
 
-		bt_start_shipped.enable();
-		bt_start_shipped.pressed = schedule->at(current_stop).is_start_shipped();
-
 		if(  current_stop!=0  &&  (!schedule->get_next_line().is_bound()  ||  current_stop!=schedule->get_count()-1)  ) {
 			bt_up.enable();
 		}
