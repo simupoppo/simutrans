@@ -21,6 +21,14 @@ const way_desc_t *strasse_t::default_strasse=NULL;
 bool strasse_t::show_masked_ribi = false;
 bool strasse_t::show_reservations = false;
 
+
+strasse_t *strasse_at(const koord3d &pos)
+{
+	const grund_t *gr = world()->lookup(pos);
+	return gr ? (strasse_t*)gr->get_weg(road_wt) : NULL;
+}
+
+
 void strasse_t::set_gehweg(bool janein)
 {
 	weg_t::set_gehweg(janein);
@@ -108,7 +116,7 @@ void strasse_t::rdwr(loadsave_t *file)
 		uint8 mask_oneway = get_ribi_mask_oneway();
 		file->rdwr_byte(mask_oneway);
 		set_ribi_mask_oneway(mask_oneway);
-		sint8 ov = get_overtaking_mode();
+		sint8 ov = get_overtaking_mode_raw();
 		file->rdwr_byte(ov);
 		overtaking_mode_t nov = (overtaking_mode_t)ov;
 		set_overtaking_mode(nov);
